@@ -1,17 +1,17 @@
 package src
 
 import (
+	"errors"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
-	"log"
 )
 
 func Start() {
-	newLogger()
-	log.Printf("Start\n")
+	readConf()
+	readLocale()
 
 	a := app.New()
 	w := a.NewWindow("oyaoya")
@@ -34,16 +34,21 @@ func Start() {
 		"\t    github - Stasenko-Konstantin\n\n"
 
 	mainMenu := fyne.NewMainMenu(fyne.NewMenu("Меню",
-		fyne.NewMenuItem("Лицензия", func() { dialog.ShowInformation("Лицензия", license, w) })))
+		fyne.NewMenuItem(locale["license"], func() { dialog.ShowInformation(locale["license"], license, w) })))
 	w.SetMainMenu(mainMenu)
 
-	label := widget.NewLabel("soon")
+	label := widget.NewLabel(locale["text"])
 
 	w.SetContent(container.NewVBox(
 		label,
 	))
 
-	log.Printf("Initiate done\n")
+	if !confOk {
+		dialog.ShowError(errors.New("Конфигурационный файл не найден!\nВсе настройки выставлены по умолчанию."), w)
+	}
+	if !localeOk {
+		dialog.ShowError(errors.New("Файл локализации не найден!\nЯзыковые настройки выставлены по умолчанию."), w)
+	}
 
 	w.ShowAndRun()
 }
