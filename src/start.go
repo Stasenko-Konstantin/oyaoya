@@ -6,6 +6,7 @@ import (
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/driver/desktop"
 	"fyne.io/fyne/v2/widget"
 )
 
@@ -15,7 +16,8 @@ func Start() {
 
 	a := app.New()
 	w := a.NewWindow("oyaoya")
-	w.Resize(fyne.NewSize(1200, 700))
+	w.Resize(fyne.NewSize(1225, 700))
+	w.SetFixedSize(true)
 
 	license := "\n\toyaoya - tracker music editor\n" +
 		"\tCopyright (C) 2021  Stasenko Konstantin\n" + "\n\n" +
@@ -37,11 +39,23 @@ func Start() {
 		fyne.NewMenuItem(locale["license"], func() { dialog.ShowInformation(locale["license"], license, w) })))
 	w.SetMainMenu(mainMenu)
 
-	label := widget.NewLabel(locale["text"])
+	channelsW := makeChannels()
 
 	w.SetContent(container.NewVBox(
-		label,
+		widget.NewSeparator(),
+		channelsW,
 	))
+
+	tab := desktop.CustomShortcut{fyne.KeyTab, desktop.ControlModifier}
+	w.Canvas().AddShortcut(&tab, func(shortcut fyne.Shortcut) {
+		unfocusChanns()
+		if currChann == 3 {
+			currChann = 0
+		} else {
+			currChann++
+		}
+		channs[currChann].entry.FocusGained()
+	})
 
 	if !confOk {
 		dialog.ShowError(errors.New("Конфигурационный файл не найден!\nВсе настройки выставлены по умолчанию."), w)
