@@ -68,12 +68,7 @@ func readLocale() {
 			}
 			break
 		}
-		switch right {
-		case "license":
-			locale["license"] = left
-		case "text":
-			locale["text"] = left
-		}
+		locale[right] = left
 	}
 }
 

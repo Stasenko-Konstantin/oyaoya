@@ -35,8 +35,20 @@ func Start() {
 		"\t    mail - stasenko.ky@gmail.com\n" +
 		"\t    github - Stasenko-Konstantin\n\n"
 
-	mainMenu := fyne.NewMainMenu(fyne.NewMenu("Меню",
-		fyne.NewMenuItem(locale["license"], func() { dialog.ShowInformation(locale["license"], license, w) })))
+	mainMenu := fyne.NewMainMenu(
+		fyne.NewMenu(locale["menu"],
+			fyne.NewMenuItem(locale["new"], func() { dialog.ShowInformation(locale["new"], locale["new"], w) }),
+			fyne.NewMenuItem(locale["open"], func() { dialog.ShowInformation(locale["open"], locale["open"], w) }),
+			fyne.NewMenuItem(locale["open recent"], func() { dialog.ShowInformation(locale["open recent"], locale["open recent"], w) }),
+			fyne.NewMenuItem(locale["save"], func() { dialog.ShowInformation(locale["save"], locale["save"], w) }),
+			fyne.NewMenuItem(locale["settings"], func() { dialog.ShowInformation(locale["settings"], locale["settings"], w) }),
+		),
+		fyne.NewMenu(locale["help"],
+			fyne.NewMenuItem(locale["about"], func() { dialog.ShowInformation(locale["about"], locale["about"], w) }),
+			fyne.NewMenuItem(locale["instruction"], func() { dialog.ShowInformation(locale["instruction"], locale["instruction"], w) }),
+			fyne.NewMenuItem(locale["license"], func() { dialog.ShowInformation(locale["license"], license, w) }),
+		),
+	)
 	w.SetMainMenu(mainMenu)
 
 	channelsW := makeChannels()

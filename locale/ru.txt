@@ -1,2 +1,10 @@
+menu: Меню
+new: Новая песня
+open: Открыть песню
+open recent: Открыть недавние
+save: Сохранить
+settings: Настройки
 license: Лицензия
-text: скоро
+about: Об авторе
+help: Помощь
+instruction: Инструкция
