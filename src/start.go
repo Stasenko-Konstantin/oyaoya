@@ -6,8 +6,16 @@ import (
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
-	"fyne.io/fyne/v2/driver/desktop"
 )
+
+var (
+	inMainWindow = true
+	cathcer      = make(chan error)
+)
+
+func errorCatcher(handler chan error, w fyne.Window) {
+	dialog.ShowError(<-handler, w)
+}
 
 func Start() {
 	readConf()
@@ -17,6 +25,7 @@ func Start() {
 	w := a.NewWindow("oyaoya")
 	w.Resize(fyne.NewSize(1200, 700))
 	w.SetFixedSize(true)
+	w.CenterOnScreen()
 
 	license := "\n\toyaoya - tracker music editor\n" +
 		"\tCopyright (C) 2021  Stasenko Konstantin\n" + "\n\n" +
@@ -58,20 +67,26 @@ func Start() {
 		),
 	))
 
-	tab := desktop.CustomShortcut{fyne.KeyTab, desktop.ControlModifier}
-	w.Canvas().AddShortcut(&tab, func(shortcut fyne.Shortcut) {
-		if currChann == 3 {
-			currChann = 0
-		} else {
-			currChann++
+	w.Canvas().SetOnTypedKey(func(e *fyne.KeyEvent) {
+		switch e.Name {
+		case "Right":
+			switcher.stepRight()
+		case "Left":
+			switcher.stepLeft()
+		case "Up":
+			switcher.stepUp()
+		case "Down":
+			switcher.stepDown()
 		}
 	})
 
+	go errorCatcher(cathcer, w)
+
 	if !confOk {
-		dialog.ShowError(errors.New("Конфигурационный файл не найден!\nВсе настройки выставлены по умолчанию."), w)
+		cathcer <- errors.New("Конфигурационный файл не найден!\nВсе настройки выставлены по умолчанию.")
 	}
 	if !localeOk {
-		dialog.ShowError(errors.New("Файл локализации не найден!\nЯзыковые настройки выставлены по умолчанию."), w)
+		cathcer <- errors.New("Файл локализации не найден!\nЯзыковые настройки выставлены по умолчанию.")
 	}
 
 	w.ShowAndRun()
