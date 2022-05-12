@@ -59,11 +59,9 @@ func Start() {
 	)
 	w.SetMainMenu(mainMenu)
 
-	channelsW := makeChannels()
-
 	w.SetContent(container.NewVBox(
 		container.NewWithoutLayout(
-			channelsW,
+			makeChannels(),
 		),
 	))
 
