@@ -8,3 +8,6 @@ license: Лицензия
 about: Об авторе
 help: Помощь
 instruction: Инструкция
+patterns: Паттерны
+choice pattern: Выберите паттерн
+cancel: Отмена

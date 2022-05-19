@@ -83,7 +83,7 @@ func setStdConf() {
 
 func setStdLocale() {
 	localeOk = false
-	locale = stdLocale
+	locale = make(map[string]string)
 	local := ""
 	for k, e := range locale {
 		local += k + ": " + e + "\n"

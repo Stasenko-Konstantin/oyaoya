@@ -11,6 +11,7 @@ import (
 var (
 	inMainWindow = true
 	cathcer      = make(chan error)
+	window       *fyne.Window
 )
 
 func errorCatcher(handler chan error, w fyne.Window) {
@@ -26,6 +27,7 @@ func Start() {
 	w.Resize(fyne.NewSize(1200, 700))
 	w.SetFixedSize(true)
 	w.CenterOnScreen()
+	window = &w
 
 	license := "\n\toyaoya - tracker music editor\n" +
 		"\tCopyright (C) 2021  Stasenko Konstantin\n" + "\n\n" +
@@ -59,11 +61,13 @@ func Start() {
 	)
 	w.SetMainMenu(mainMenu)
 
+	widgets := makePatterns()
+	widgets = append(widgets, makeChannels())
 	w.SetContent(container.NewVBox(
-		container.NewWithoutLayout(
-			makeChannels(),
-		),
+		widgets...,
 	))
+	hideAll()
+	channelsSelect[0].channel.Show()
 
 	w.Canvas().SetOnTypedKey(func(e *fyne.KeyEvent) {
 		switch e.Name {
