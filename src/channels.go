@@ -36,13 +36,20 @@ type Channel struct {
 
 const (
 	rows = 64
-	cols = 24
+	cols = 20
 )
 
 var (
 	switcher       *Switcher
 	channelsSelect []Channel
+	currPattern    = 0
 )
+
+func hideAll() {
+	for _, c := range channelsSelect {
+		c.channel.Hide()
+	}
+}
 
 func makeChannels() *fyne.Container {
 	var channelsArr []fyne.CanvasObject
@@ -54,7 +61,7 @@ func makeChannels() *fyne.Container {
 				entry := widget.NewEntry()
 				canvas[i][j] = entry
 				entry.SetPlaceHolder("  .")
-				if i%6 == 0 {
+				if i%5 == 0 {
 					entry.SetPlaceHolder("___")
 				}
 			}
@@ -72,23 +79,17 @@ func makeChannels() *fyne.Container {
 		containers = append(containers, container.NewVBox(spaces...))
 		for i := 0; i < cols; i++ {
 			entrys := canvas[i]
-			if i%6 == 0 && i != 0 {
+			if i%5 == 0 && i != 0 {
 				containers = append(containers, container.NewVBox(spaces...))
 			}
 			containers = append(containers, container.NewVBox(entrys...))
 		}
 		channels := container.NewScroll(container.NewHBox(containers...))
 		channels.Resize(fyne.NewSize(1200, 370))
-		channels.Move(fyne.NewPos(0, 175))
+		channels.Move(fyne.NewPos(0, 297))
 		channel := container.NewWithoutLayout(channels)
 		channelsArr = append(channelsArr, channel)
 		channelsSelect = append(channelsSelect, Channel{channel: channel, index: i})
 	}
 	return container.NewVBox(channelsArr...)
-}
-
-func hideAll() {
-	for _, c := range channelsSelect {
-		c.channel.Hide()
-	}
 }

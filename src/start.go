@@ -24,7 +24,7 @@ func Start() {
 
 	a := app.New()
 	w := a.NewWindow("oyaoya")
-	w.Resize(fyne.NewSize(1200, 700))
+	w.Resize(fyne.NewSize(1025, 700))
 	w.SetFixedSize(true)
 	w.CenterOnScreen()
 	window = &w
@@ -61,10 +61,10 @@ func Start() {
 	)
 	w.SetMainMenu(mainMenu)
 
-	widgets := makePatterns()
-	widgets = append(widgets, makeChannels())
-	w.SetContent(container.NewVBox(
-		widgets...,
+	w.SetContent(container.NewWithoutLayout(
+		makePatterns(),
+		makePlay(),
+		makeChannels(),
 	))
 	hideAll()
 	channelsSelect[0].channel.Show()

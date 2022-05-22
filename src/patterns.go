@@ -1,11 +1,13 @@
 package src
 
 import (
+	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
 	"strconv"
+	"strings"
 )
 
 type Pattern string // !!!!!!!!!
@@ -22,34 +24,35 @@ var (
 	songPatterns  *container.Scroll
 )
 
-func makePatterns() []fyne.CanvasObject {
+func getSequence() (string, map[int]int) {
+	var sequenceStr string
+	sequenceSet := make(map[int]int)
+	for i := 0; i < 10; i++ {
+		n := songPatterns.Content.(*fyne.Container).Objects[i].(*widget.Button).Text
+		if !strings.Contains(n, "+") {
+			num := strToNum(n)
+			sequenceSet[num] = num
+			sequenceStr += n + ","
+		}
+	}
+	fmt.Println(sequenceStr == "")
+	if sequenceStr == "" {
+		sequenceStr = strconv.Itoa(currPattern)
+		sequenceSet[currPattern] = currPattern
+		return sequenceStr, sequenceSet
+	}
+	sequenceStr = strings.ReplaceAll(sequenceStr, " ", "")
+	return sequenceStr[:len(sequenceStr)-1], sequenceSet
+}
+
+func makePatterns() fyne.CanvasObject {
 	var channelsArr []fyne.CanvasObject
 	for i := 0; i < patternsCount; i++ {
 		button := func(i int) *widget.Button {
 			return widget.NewButton(wrapStr(strconv.Itoa(i)), func() {
 				hideAll()
-				switch i {
-				case channelsSelect[0].index:
-					channelsSelect[0].channel.Show()
-				case channelsSelect[1].index:
-					channelsSelect[1].channel.Show()
-				case channelsSelect[2].index:
-					channelsSelect[2].channel.Show()
-				case channelsSelect[3].index:
-					channelsSelect[3].channel.Show()
-				case channelsSelect[4].index:
-					channelsSelect[4].channel.Show()
-				case channelsSelect[5].index:
-					channelsSelect[5].channel.Show()
-				case channelsSelect[6].index:
-					channelsSelect[6].channel.Show()
-				case channelsSelect[7].index:
-					channelsSelect[7].channel.Show()
-				case channelsSelect[8].index:
-					channelsSelect[8].channel.Show()
-				case channelsSelect[9].index:
-					channelsSelect[9].channel.Show()
-				}
+				channelsSelect[i].channel.Show()
+				currPattern = i
 			})
 		}(i)
 		channelsArr = append(channelsArr, button)
@@ -65,6 +68,7 @@ func makePatterns() []fyne.CanvasObject {
 					return widget.NewButton(strconv.Itoa(i), func() {})
 				}(i))
 			}
+			patternsChoice = append(patternsChoice, widget.NewButton("-", func() {}))
 			d := dialog.NewCustom(locale["choice pattern"], locale["cancel"], container.NewVBox(patternsChoice...),
 				*window)
 			for i := 0; i < patternsCount; i++ {
@@ -75,6 +79,10 @@ func makePatterns() []fyne.CanvasObject {
 					})
 				}(i)
 			}
+			patternsChoice[patternsCount] = widget.NewButton("-", func() {
+				button.SetText(" + ")
+				d.Hide()
+			})
 			d.Resize(fyne.NewSize(100, 400))
 			d.Show()
 		})
@@ -82,9 +90,10 @@ func makePatterns() []fyne.CanvasObject {
 	}
 	songPatterns = container.NewHScroll(container.NewHBox(songPatternsArr...))
 	label := widget.NewLabel(locale["patterns"])
-	return []fyne.CanvasObject{
+	patterns.scroll.SetMinSize(fyne.NewSize(500, 20))
+	return container.NewVBox(
 		label,
 		patterns.scroll,
 		songPatterns,
-	}
+	)
 }
