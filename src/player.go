@@ -32,10 +32,13 @@ func takeContent(pattern, row, col int) string { // ужас
 			if len(t) == 0 {
 				t = "--"
 			} else if len(t) == 1 {
-				if i == 2 {
-					t = "-" + t
-				} else {
+				switch i {
+				case 0:
 					t += "-"
+				case 2:
+					t = "-" + t
+				case 4:
+					t = "0" + t
 				}
 			}
 		} else {
@@ -48,9 +51,9 @@ func takeContent(pattern, row, col int) string { // ужас
 	return r
 }
 
-func playTrack(play *widget.Button) {
+func playTrack(play *widget.Button, current bool) {
 	play.SetText("||")
-	sequenceStr, sequenceSlice := getSequence()
+	sequenceStr, sequenceSlice := getSequence(current)
 	temp := title + sequenceStr + instruments
 	for _, s := range sequenceSlice {
 		temp += "\n\tPattern " + strconv.Itoa(s) + " (play)"
@@ -79,10 +82,18 @@ func makePlay() fyne.CanvasObject {
 	play.OnTapped = func() {
 		fmt.Println(isPlay)
 		if !isPlay {
-			go playTrack(play)
+			go playTrack(play, false)
 		}
 	}
 	play.Resize(fyne.NewSize(33, 37))
 	play.Move(fyne.NewPos(975, 10))
-	return container.NewWithoutLayout(play)
+	playCurr := widget.NewButton(">", func() {})
+	playCurr = widget.NewButton(">", func() {
+		if !isPlay {
+			go playTrack(playCurr, true)
+		}
+	})
+	playCurr.Resize(fyne.NewSize(33, 37))
+	playCurr.Move(fyne.NewPos(0, 250))
+	return container.NewWithoutLayout(play, playCurr)
 }

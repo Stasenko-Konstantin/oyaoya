@@ -1,7 +1,6 @@
 package src
 
 import (
-	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
@@ -24,18 +23,19 @@ var (
 	songPatterns  *container.Scroll
 )
 
-func getSequence() (string, map[int]int) {
+func getSequence(current bool) (string, map[int]int) {
 	var sequenceStr string
 	sequenceSet := make(map[int]int)
-	for i := 0; i < 10; i++ {
-		n := songPatterns.Content.(*fyne.Container).Objects[i].(*widget.Button).Text
-		if !strings.Contains(n, "+") {
-			num := strToNum(n)
-			sequenceSet[num] = num
-			sequenceStr += n + ","
+	if !current {
+		for i := 0; i < 10; i++ {
+			n := songPatterns.Content.(*fyne.Container).Objects[i].(*widget.Button).Text
+			if !strings.Contains(n, "+") {
+				num := strToNum(n)
+				sequenceSet[num] = num
+				sequenceStr += n + ","
+			}
 		}
 	}
-	fmt.Println(sequenceStr == "")
 	if sequenceStr == "" {
 		sequenceStr = strconv.Itoa(currPattern)
 		sequenceSet[currPattern] = currPattern

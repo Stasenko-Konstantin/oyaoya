@@ -1,3 +1,2 @@
-micromod: micromod.jar
 langs: ru, en
 lang: ru

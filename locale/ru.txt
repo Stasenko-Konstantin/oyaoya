@@ -1,8 +1,8 @@
 menu: Меню
-new: Новая песня
-open: Открыть песню
-open recent: Открыть недавние
+new: Новая композиция
+open: Открыть
 save: Сохранить
+save as: Сохранить как
 settings: Настройки
 license: Лицензия
 about: Об авторе
@@ -11,3 +11,4 @@ instruction: Инструкция
 patterns: Паттерны
 choice pattern: Выберите паттерн
 cancel: Отмена
+wrong format: Неверный формат!Попробуйте .mt или .mod

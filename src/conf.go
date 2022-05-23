@@ -6,11 +6,10 @@ import (
 )
 
 var (
-	confOk   bool = true
-	micromod string
+	confOk = true
 
-	localeOk bool = true
-	locale        = make(map[string]string)
+	localeOk = true
+	locale   = make(map[string]string)
 	lang     string
 	langs    []string
 )
@@ -37,8 +36,6 @@ func readConf() {
 			break
 		}
 		switch right {
-		case "micromod":
-			micromod = left
 		case "lang":
 			lang = left
 		case "langs":
@@ -74,8 +71,7 @@ func readLocale() {
 
 func setStdConf() {
 	confOk = false
-	conf := "micromod: micromod.jar\n" +
-		"langs: ru\n" +
+	conf := "langs: ru\n" +
 		"lang: ru"
 	os.WriteFile("config.txt", []byte(conf), 0644)
 	readConf()
@@ -89,9 +85,4 @@ func setStdLocale() {
 		local += k + ": " + e + "\n"
 	}
 	os.WriteFile("locale/ru.txt", []byte(local[:len(local)-1]), 0644)
-}
-
-var stdLocale = map[string]string{
-	"license": "Лицензия",
-	"text":    "скоро",
 }

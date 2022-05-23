@@ -1,33 +1,11 @@
 package src
 
 import (
-	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 	"strconv"
 )
-
-type Switcher struct {
-	rows int
-	cols int
-}
-
-func (s *Switcher) stepLeft() {
-	fmt.Println("s")
-}
-
-func (s *Switcher) stepRight() {
-	fmt.Println("s")
-}
-
-func (s *Switcher) stepUp() {
-	fmt.Println("s")
-}
-
-func (s *Switcher) stepDown() {
-	fmt.Println("s")
-}
 
 type Channel struct {
 	index   int
@@ -40,7 +18,6 @@ const (
 )
 
 var (
-	switcher       *Switcher
 	channelsSelect []Channel
 	currPattern    = 0
 )
@@ -61,7 +38,7 @@ func makeChannels() *fyne.Container {
 				entry := widget.NewEntry()
 				canvas[i][j] = entry
 				entry.SetPlaceHolder("  .")
-				if i%5 == 0 {
+				if i%5 == 0 || (i-2)%5 == 0 || (i-4)%5 == 0 {
 					entry.SetPlaceHolder("___")
 				}
 			}
@@ -92,4 +69,21 @@ func makeChannels() *fyne.Container {
 		channelsSelect = append(channelsSelect, Channel{channel: channel, index: i})
 	}
 	return container.NewVBox(channelsArr...)
+}
+
+func makeNames() *fyne.Container {
+	var names *fyne.Container
+	var namesArr []fyne.CanvasObject
+	namesArr = append(namesArr, widget.NewLabel(" "), widget.NewLabel(" "))
+	for i := 0; i < 4; i++ {
+		namesArr = append(namesArr, widget.NewLabel("KK"))
+		namesArr = append(namesArr, widget.NewLabel("  O"))
+		namesArr = append(namesArr, widget.NewLabel("   II"))
+		namesArr = append(namesArr, widget.NewLabel("  F"))
+		namesArr = append(namesArr, widget.NewLabel("  PP"))
+		namesArr = append(namesArr, widget.NewLabel("  "))
+	}
+	names = container.NewHBox(namesArr...)
+	names.Move(fyne.NewPos(15, 250))
+	return names
 }
