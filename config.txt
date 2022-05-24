@@ -1,2 +1,3 @@
 langs: ru, en
 lang: ru
+theme: color

@@ -21,13 +21,7 @@ var (
 		"\tcontacts:\n" +
 		"\t    mail - stasenko.ky@gmail.com\n" +
 		"\t    github - Stasenko-Konstantin\n\n"
-	instruction = `Ноты имеют форму 'KKOIIFPP', где:
-
-    KK = Ключ (один из 'C-', 'C#', 'D-', 'D#', 'E-', 'F-', 'F#', 'G-', 'G#', 'A-', 'A#', 'B-', или '--').
-    O  = Октава (от 0 до 6, или '-').
-    II = Инструмент (десятичное число от 1 до 99, или '--').
-    F  = Эффект (шестнадцатеричное число от 0 до F, или '-').
-    PP = Параметр эффекта (шестнадцатеричное число от 00 до FF, или '--').`
+	instruction = "" // start.go getInstruction()
 )
 
 var (

@@ -1,6 +1,8 @@
 package src
 
 import (
+	"fyne.io/fyne/v2"
+	theme2 "fyne.io/fyne/v2/theme"
 	"os"
 	"strings"
 )
@@ -40,6 +42,18 @@ func readConf() {
 			lang = left
 		case "langs":
 			langs = strings.Split(left, ", ")
+		case "theme":
+			switch left {
+			case "dark":
+				fyne.CurrentApp().Settings().SetTheme(theme2.DarkTheme())
+				fon.Hide()
+			case "light":
+				fyne.CurrentApp().Settings().SetTheme(theme2.LightTheme())
+				fon.Hide()
+			default:
+				fyne.CurrentApp().Settings().SetTheme(theme2.DarkTheme())
+				fon.Show()
+			}
 		}
 	}
 }
@@ -71,8 +85,10 @@ func readLocale() {
 
 func setStdConf() {
 	confOk = false
-	conf := "langs: ru\n" +
-		"lang: ru"
+	conf := `langs: ru
+lang: ru
+theme: color
+`
 	os.WriteFile("config.txt", []byte(conf), 0644)
 	readConf()
 }
@@ -85,4 +101,14 @@ func setStdLocale() {
 		local += k + ": " + e + "\n"
 	}
 	os.WriteFile("locale/ru.txt", []byte(local[:len(local)-1]), 0644)
+}
+
+func getInstruction() string {
+	var r string
+	data, err := os.ReadFile(locale["instruction text"])
+	if err != nil {
+		return err.Error()
+	}
+	r = string(data)
+	return r
 }

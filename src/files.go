@@ -3,13 +3,28 @@ package src
 import (
 	"errors"
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/widget"
 	"os"
 	"strconv"
 	"strings"
 )
 
 func setNewSong() {
-	
+	(*window).SetTitle("oyaoya")
+	for _, c := range channelsSelect {
+		for _, col := range c.channel.Objects[0].(*container.Scroll).Content.(*fyne.Container).Objects {
+			for _, cell := range col.(*fyne.Container).Objects {
+				switch v := cell.(type) {
+				case *widget.Entry:
+					v.SetText("")
+				}
+			}
+		}
+	}
+	for _, p := range songPatterns.Content.(*fyne.Container).Objects {
+		p.(*widget.Button).SetText(" + ")
+	}
 }
 
 func openSong(path fyne.URIReadCloser) {
