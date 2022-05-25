@@ -94,6 +94,6 @@ func makePlay() fyne.CanvasObject {
 		}
 	})
 	playCurr.Resize(fyne.NewSize(33, 37))
-	playCurr.Move(fyne.NewPos(0, 250))
+	playCurr.Move(fyne.NewPos(0, 210))
 	return container.NewWithoutLayout(play, playCurr)
 }

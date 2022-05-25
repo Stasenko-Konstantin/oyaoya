@@ -26,7 +26,7 @@ func errorCatcher(handler chan error, w fyne.Window) {
 func Start() {
 	var (
 		width  float32 = 1025
-		height float32 = 700
+		height float32 = 653
 	)
 
 	logo, _ := fyne.LoadResourceFromPath("etc/logo.png")
@@ -77,6 +77,7 @@ func Start() {
 	w.SetContent(container.NewWithoutLayout(
 		fon,
 		makePatterns(),
+		makeInstruments(),
 		makePlay(),
 		makeNames(),
 		makeChannels(),

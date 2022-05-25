@@ -63,7 +63,7 @@ func makeChannels() *fyne.Container {
 		}
 		channels := container.NewScroll(container.NewHBox(containers...))
 		channels.Resize(fyne.NewSize(1200, 370))
-		channels.Move(fyne.NewPos(0, 297))
+		channels.Move(fyne.NewPos(0, 250))
 		channel := container.NewWithoutLayout(channels)
 		channelsArr = append(channelsArr, channel)
 		channelsSelect = append(channelsSelect, Channel{channel: channel, index: i})
@@ -84,6 +84,6 @@ func makeNames() *fyne.Container {
 		namesArr = append(namesArr, widget.NewLabel("  "))
 	}
 	names = container.NewHBox(namesArr...)
-	names.Move(fyne.NewPos(15, 250))
+	names.Move(fyne.NewPos(15, 210))
 	return names
 }

@@ -16,3 +16,4 @@ instruction text: locale/instruction-ru.txt
 dark theme: Темная тема
 light theme: Светлая тема
 color theme: Цветная тема
+instruments: Инструменты
