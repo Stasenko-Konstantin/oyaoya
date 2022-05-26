@@ -72,7 +72,6 @@ func Start() {
 		),
 	)
 	w.SetMainMenu(mainMenu)
-	instruction = getInstruction()
 
 	w.SetContent(container.NewWithoutLayout(
 		fon,
@@ -92,6 +91,12 @@ func Start() {
 	}
 	if !localeOk {
 		cathcer <- errors.New("Файл локализации не найден!\nЯзыковые настройки выставлены по умолчанию.")
+	}
+
+	instr, err := getInstruction()
+	instruction = instr
+	if err != nil {
+		cathcer <- err
 	}
 
 	w.ShowAndRun()

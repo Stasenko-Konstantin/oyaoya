@@ -87,3 +87,16 @@ func checkFormat(format string) bool {
 	}
 	return r
 }
+
+func addTxt(lang string) string {
+	var r string
+	for _, c := range lang {
+		if c != '\r' {
+			r += string(c)
+		}
+	}
+	for _, c := range ".txt" {
+		r += string(c)
+	}
+	return r
+}

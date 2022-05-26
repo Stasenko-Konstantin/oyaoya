@@ -1,6 +1,7 @@
 package src
 
 import (
+	"fmt"
 	"fyne.io/fyne/v2"
 	theme2 "fyne.io/fyne/v2/theme"
 	"os"
@@ -61,10 +62,12 @@ func readConf() {
 func readLocale() {
 	defer func() {
 		if r := recover(); r != nil {
+			fmt.Println(r.(error).Error())
 			setStdLocale()
 		}
 	}()
-	text, err := os.ReadFile("locale/" + lang + ".txt")
+	lang := "locale/" + lang
+	text, err := os.ReadFile(addTxt(lang))
 	if err != nil {
 		setStdLocale()
 	}
@@ -103,12 +106,18 @@ func setStdLocale() {
 	os.WriteFile("locale/ru.txt", []byte(local[:len(local)-1]), 0644)
 }
 
-func getInstruction() string {
+func getInstruction() (string, error) {
 	var r string
-	data, err := os.ReadFile(locale["instruction text"])
+	var path string
+	for _, c := range locale["instruction text"] {
+		if c != '\r' {
+			path += string(c)
+		}
+	}
+	data, err := os.ReadFile(path)
 	if err != nil {
-		return err.Error()
+		return "", err
 	}
 	r = string(data)
-	return r
+	return r, nil
 }
