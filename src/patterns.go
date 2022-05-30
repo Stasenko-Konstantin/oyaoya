@@ -9,12 +9,10 @@ import (
 	"strings"
 )
 
-type Pattern string // !!!!!!!!!
-
 type Patterns struct {
 	scroll   *container.Scroll
 	border   int
-	patterns map[int]Pattern
+	patterns map[int]string
 }
 
 var (
@@ -69,7 +67,7 @@ func makePatterns() fyne.CanvasObject {
 				}(i))
 			}
 			patternsChoice = append(patternsChoice, widget.NewButton("-", func() {}))
-			d := dialog.NewCustom(locale["choice pattern"], locale["cancel"], container.NewVBox(patternsChoice...),
+			d := dialog.NewCustom(locale["choose pattern"], locale["cancel"], container.NewVBox(patternsChoice...),
 				*window)
 			for i := 0; i < patternsCount; i++ {
 				patternsChoice[i] = func(i int) *widget.Button {

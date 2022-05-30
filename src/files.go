@@ -7,6 +7,7 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -28,6 +29,9 @@ func setNewSong() {
 }
 
 func openSong(path fyne.URIReadCloser) {
+	if path == nil {
+		return
+	}
 	name := strings.Split(path.URI().Name(), ".")
 	if len(name) < 2 || checkFormat(name[1]) {
 		cathcer <- errors.New(locale["wrong format"])
@@ -48,7 +52,7 @@ func openMt(path fyne.URIReadCloser) {
 	i := 0
 	defer func() {
 		if r := recover(); r != nil {
-			//setNewSong()
+			setNewSong()
 			i = 1
 			return
 		}
@@ -75,33 +79,33 @@ func openMt(path fyne.URIReadCloser) {
 			}
 			return r[:len(r)-1]
 		}()
-		//sequence := func() []int {
-		//	var sequence []int
-		//	var s string
-		//	for i := 0; true; i++ {
-		//		if content[i] == 'S' {
-		//			if content[i:i+8] == "Sequence" {
-		//				s = strings.Split(content[i+8:], "\n")[0]
-		//				break
-		//			}
-		//		}
-		//	}
-		//	s = strings.ReplaceAll(s, " ", "")
-		//	for _, p := range strings.Split(s, ",") {
-		//		t, err := strconv.Atoi(p)
-		//		if err != nil {
-		//			cathcer <- err
-		//		}
-		//		sequence = append(sequence, t)
-		//	}
-		//	if len(sequence) > 10 {
-		//		sequence = sequence[9:]
-		//	}
-		//	return sequence
-		//}
+		sequence := func() []int {
+			var sequence []int
+			var s string
+			for i := 0; true; i++ {
+				if content[i] == 'S' {
+					if content[i:i+8] == "Sequence" {
+						s = strings.Split(content[i+8:], "\n")[0]
+						break
+					}
+				}
+			}
+			s = strings.ReplaceAll(s, " ", "")
+			for _, p := range strings.Split(s, ",") {
+				t, err := strconv.Atoi(p)
+				if err != nil {
+					cathcer <- err
+				}
+				sequence = append(sequence, t)
+			}
+			if len(sequence) > 10 {
+				sequence = sequence[9:]
+			}
+			return sequence
+		}
 
 		(*window).SetTitle(module)
-		//setSequence(sequence())
+		setSequence(sequence())
 		i++
 	}
 }

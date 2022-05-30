@@ -1,6 +1,7 @@
 package src
 
 import (
+	"os"
 	"strconv"
 	"strings"
 )
@@ -99,4 +100,13 @@ func addTxt(lang string) string {
 		r += string(c)
 	}
 	return r
+}
+
+func findDir(dirs []os.DirEntry, dir string) bool {
+	for _, file := range dirs {
+		if file.IsDir() && file.Name() == dir {
+			return true
+		}
+	}
+	return false
 }

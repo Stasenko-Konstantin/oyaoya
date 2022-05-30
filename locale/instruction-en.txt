@@ -1,0 +1,8 @@
+Notes takes the form 'KKOIIFPP', where:
+
+    KK = Key (One of 'C-', 'C#', 'D-', 'D#', 'E-', 'F-', 'F#',
+                     'G-', 'G#', 'A-', 'A#', 'B-', or '--').
+    O  = Octave (0 to 6, or '-').
+    II = Instrument or macro index (Decimal, 01 to 99, or '--').
+    F  = Effect Command (Hexadecimal, 0 to F, or '-').
+    PP = Effect Parameter (Hexadecimal, 00 to FF, or '--').

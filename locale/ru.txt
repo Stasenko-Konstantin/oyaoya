@@ -11,7 +11,7 @@ instruction: Инструкция
 patterns: Паттерны
 choice pattern: Выберите паттерн
 cancel: Отмена
-wrong format: Неверный формат!Попробуйте .mt или .mod
+wrong format: Неверный формат! Попробуйте .mt или .mod
 instruction text: locale/instruction-ru.txt
 dark theme: Темная тема
 light theme: Светлая тема

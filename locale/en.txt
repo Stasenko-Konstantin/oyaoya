@@ -1,0 +1,20 @@
+menu: Menu
+new: New composition
+open: Open
+save: Save
+save as: Save as
+settings: Settings
+license: License
+about: About author
+help: Help
+instruction: Instruction
+patterns: Patterns
+choose pattern: Choose pattern
+cancel: Cancel
+wrong format: Wron format! Try .mt or .mod
+instruction text: locale/instruction-en.txt
+dark theme: Dark theme
+light theme: Light theme
+color theme: Color theme
+instruments: Instruments
+about text: Student 432 gr. Stasenko K.Y.

@@ -9,14 +9,13 @@ import (
 	"fyne.io/fyne/v2/dialog"
 	theme2 "fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
-	"os"
-	"strings"
 )
 
 var (
 	cathcer = make(chan error)
 	window  *fyne.Window
 	fon     *canvas.Image
+	widgets *fyne.Container
 )
 
 func errorCatcher(handler chan error, w fyne.Window) {
@@ -46,6 +45,8 @@ func Start() {
 	fon.Resize(fyne.NewSize(width, height))
 	fon.Show()
 
+	go errorCatcher(cathcer, w)
+
 	readConf()
 	readLocale()
 
@@ -58,7 +59,7 @@ func Start() {
 			fyne.NewMenuItem(locale["settings"], func() {
 				dialog.ShowCustom(locale["settings"], locale["cancel"], container.NewVBox(
 					container.NewHScroll(container.NewHBox(
-						widget.NewButton("ru", func() {}),
+						makeLangs()...,
 					)),
 					container.NewHBox(
 						widget.NewButton(locale["dark theme"], func() { a.Settings().SetTheme(theme2.DarkTheme()); fon.Hide(); setTheme("dark") }),
@@ -76,18 +77,17 @@ func Start() {
 	)
 	w.SetMainMenu(mainMenu)
 
-	w.SetContent(container.NewWithoutLayout(
+	widgets = container.NewWithoutLayout(
 		fon,
 		makePatterns(),
 		makeInstruments(),
 		makePlay(),
 		makeNames(),
 		makeChannels(),
-	))
+	)
+	w.SetContent(widgets)
 	hideAll()
 	channelsSelect[0].channel.Show()
-
-	go errorCatcher(cathcer, w)
 
 	if !confOk {
 		cathcer <- errors.New("Конфигурационный файл не найден!\nВсе настройки выставлены по умолчанию.")
@@ -96,7 +96,7 @@ func Start() {
 		cathcer <- errors.New("Файл локализации не найден!\nЯзыковые настройки выставлены по умолчанию.")
 	}
 
-	instr, err := getInstruction()
+	instr, err := getInstruction(locale["instruction text"])
 	instruction = instr
 	if err != nil {
 		cathcer <- err
@@ -106,31 +106,5 @@ func Start() {
 }
 
 func setTheme(theme string) {
-	defer func() {
-		if r := recover(); r != nil {
-			setStdConf()
-		}
-	}()
-	text, err := os.ReadFile("config.txt")
-	if err != nil {
-		setStdConf()
-	}
-	conf := strings.Split(string(text), "\n")
-	for i, e := range conf {
-		parts := strings.Split(e, ":")
-		left := parts[0]
-		for _, l := range left {
-			if l == ' ' {
-				left = (left)[1:]
-			}
-			break
-		}
-		if left == "theme" {
-			conf[i] = left + ": " + theme
-		}
-	}
-	err = os.WriteFile("config.txt", []byte(strings.Join(conf, "\n")), 0644)
-	if err != nil {
-		cathcer <- err
-	}
+	setConfigField("theme", theme)
 }
