@@ -54,9 +54,12 @@ func Start() {
 			fyne.NewMenuItem(locale["new"], func() { setNewSong() }),
 			fyne.NewMenuItem(locale["open"], func() { dialog.ShowFileOpen(func(closer fyne.URIReadCloser, err error) { openSong(closer) }, w) }),
 			fyne.NewMenuItem(locale["save"], func() { dialog.ShowInformation(locale["save"], locale["save"], w) }),
-			fyne.NewMenuItem(locale["save as"], func() { dialog.ShowInformation(locale["save as"], locale["save as"], w) }),
+			fyne.NewMenuItem(locale["save as"], func() { dialog.ShowFileSave(func(closer fyne.URIWriteCloser, err error) {}, w) }),
 			fyne.NewMenuItem(locale["settings"], func() {
 				dialog.ShowCustom(locale["settings"], locale["cancel"], container.NewVBox(
+					container.NewHScroll(container.NewHBox(
+						widget.NewButton("ru", func() {}),
+					)),
 					container.NewHBox(
 						widget.NewButton(locale["dark theme"], func() { a.Settings().SetTheme(theme2.DarkTheme()); fon.Hide(); setTheme("dark") }),
 						widget.NewButton(locale["light theme"], func() { a.Settings().SetTheme(theme2.LightTheme()); fon.Hide(); setTheme("light") }),
@@ -66,7 +69,7 @@ func Start() {
 			}),
 		),
 		fyne.NewMenu(locale["help"],
-			fyne.NewMenuItem(locale["about"], func() { dialog.ShowInformation(locale["about"], locale["about"], w) }),
+			fyne.NewMenuItem(locale["about"], func() { dialog.ShowInformation(locale["about"], locale["about text"], w) }),
 			fyne.NewMenuItem(locale["instruction"], func() { dialog.ShowCustom(locale["instruction"], "OK", widget.NewLabel(instruction), w) }),
 			fyne.NewMenuItem(locale["license"], func() { dialog.ShowInformation(locale["license"], license, w) }),
 		),
