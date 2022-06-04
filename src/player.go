@@ -70,7 +70,7 @@ func playTrack(play *widget.Button, current bool) {
 	cmd := exec.Command("java", "-jar", "micromod.jar", "temp.mt")
 	stdout, err := cmd.Output()
 	if err != nil {
-		cathcer <- err
+		fmt.Println(err.Error())
 	}
 	fmt.Println(string(stdout))
 	play.SetText(">")
