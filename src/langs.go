@@ -2,6 +2,7 @@ package src
 
 import (
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
 	"os"
 )
@@ -30,8 +31,11 @@ func makeLangs() []fyne.CanvasObject {
 	return langsArr
 }
 
-func setLang(lang string) { ////////////
-	setConfigField("lang", lang)
-	readConf()
-	readLocale()
+func setLang(lang string) {
+	go func() {
+		setConfigField("lang", lang)
+		readConf()
+		readLocale()
+	}()
+	dialog.ShowInformation(locale["change lang"], locale["change lang msg"], *window)
 }

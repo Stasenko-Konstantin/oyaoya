@@ -83,6 +83,9 @@ AGAIN:
 	}
 	local := strings.Split(string(text), "\n")
 	for _, e := range local {
+		if !strings.Contains(e, ":") {
+			break
+		}
 		parts := strings.Split(e, ":")
 		right := parts[0]
 		left := parts[1]
@@ -179,12 +182,6 @@ func setConfigField(field, right string) {
 	for i, e := range conf {
 		parts := strings.Split(e, ":")
 		left := parts[0]
-		for _, l := range left {
-			if l == ' ' {
-				left = (left)[1:]
-			}
-			break
-		}
 		if left == field {
 			conf[i] = left + ": " + right
 		}

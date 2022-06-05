@@ -18,3 +18,5 @@ light theme: Light theme
 color theme: Color theme
 instruments: Instruments
 about text: Student 432 gr. Stasenko K.Y.
+change lang: Language change
+change lang msg: For the settings to take effect, restart the program
