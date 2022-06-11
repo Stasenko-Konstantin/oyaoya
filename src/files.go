@@ -6,7 +6,9 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
+	"io"
 	"os"
+	"os/exec"
 	"strconv"
 	"strings"
 )
@@ -40,15 +42,43 @@ func openSong(path fyne.URIReadCloser) {
 	if name[1] == "mod" {
 		openMod(path)
 	} else {
-		openMt(path)
+		openMt(path.URI().Path())
 	}
 }
 
 func openMod(path fyne.URIReadCloser) {
+	sFile, err := os.Open(path.URI().Path())
+	if err != nil {
+		cathcer <- err
+		return
+	}
+	tFile, err := os.Create("temp.mod")
+	if err != nil {
+		cathcer <- err
+		return
+	}
+	defer sFile.Close()
+	defer tFile.Close()
 
+	buf := make([]byte, 1024*4)
+	for {
+		n, err := sFile.Read(buf)
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
+			cathcer <- err
+		}
+		tFile.Write(buf[:n])
+	}
+
+	cmd := exec.Command("java", "-jar", "micromod.jar", "-mod", "temp.mod", "-dir", "temp")
+	stdout, _ := cmd.Output()
+	fmt.Println(string(stdout))
+	openMt("temp/module.mt")
 }
 
-func openMt(path fyne.URIReadCloser) {
+func openMt(path string) {
 	i := 0
 	defer func() {
 		if r := recover(); r != nil {
@@ -59,8 +89,7 @@ func openMt(path fyne.URIReadCloser) {
 	}()
 	fmt.Println(i)
 	for i < 1 {
-		defer path.Close()
-		data, err := os.ReadFile(path.URI().Path())
+		data, err := os.ReadFile(path)
 		if err != nil {
 			cathcer <- err
 			return

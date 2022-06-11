@@ -10,12 +10,16 @@ import (
 	"io/fs"
 	"io/ioutil"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 )
 
 func makeInstruments() fyne.CanvasObject {
-	var instrumentsArr []fyne.CanvasObject
+	var (
+		instrumentsArr []fyne.CanvasObject
+		instr          string
+	)
 	files, err := ioutil.ReadDir("samples")
 	if err != nil {
 		cathcer <- err
@@ -23,6 +27,20 @@ func makeInstruments() fyne.CanvasObject {
 	for _, i := range files {
 		slice := strings.Split(i.Name(), ".")
 		if slice[len(slice)-1] == "wav" {
+			parts := strings.Split(i.Name()[:len(i.Name())-4], "|")
+			if len(parts) != 3 {
+				continue
+			}
+			instr += "\tInstrument "
+			_, err := strconv.Atoi(parts[0])
+			if err != nil {
+				continue
+			}
+			instr += parts[0] + " Name \"" + parts[1] + "\"\n\t\tVolume 64 FineTune 0\n\t\tWaveFile \"samples/" + i.Name() + "\""
+			if cont, start, length := checkStars(parts[2]); !cont {
+				instr += "\n\t\tLoopStart " + start + " LoopLength " + length
+			}
+			name := parts[0] + " " + parts[1]
 			instrumentsArr = append(instrumentsArr, container.NewHBox(
 				widget.NewButton(">", func(i fs.FileInfo) func() {
 					return func() {
@@ -42,10 +60,11 @@ func makeInstruments() fyne.CanvasObject {
 						}()
 					}
 				}(i)),
-				widget.NewLabel(slice[0]),
+				widget.NewLabel(name),
 			))
 		}
 	}
+	instruments = instr
 	instruments := container.NewVScroll(container.NewVBox(instrumentsArr...))
 	instruments.SetMinSize(fyne.NewSize(440, 150))
 	label := widget.NewLabel(locale["instruments"])

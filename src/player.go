@@ -52,6 +52,7 @@ func takeContent(pattern, row, col int) string { // ужас
 }
 
 func playTrack(play *widget.Button, current bool) {
+	needPlay := false
 	play.SetText("||")
 	sequenceStr, sequenceSlice := getSequence(current)
 	temp := title + sequenceStr + instruments
@@ -60,18 +61,22 @@ func playTrack(play *widget.Button, current bool) {
 		for row := 0; row < 64; row++ {
 			row := "\n\t\tRow \"" + takeContent(s, row, 0) + " " + takeContent(s, row, 1) +
 				" " + takeContent(s, row, 2) + " " + takeContent(s, row, 3) + "\""
+			if row != "\n\t\tRow \"-------- -------- -------- --------\"" {
+				needPlay = true
+			}
 			temp += row
 		}
+	}
+	if !needPlay {
+		play.SetText(">")
+		return
 	}
 	err := os.WriteFile("temp.mt", []byte(temp+"\n(End)"), 0644)
 	if err != nil {
 		cathcer <- err
 	}
 	cmd := exec.Command("java", "-jar", "micromod.jar", "temp.mt")
-	stdout, err := cmd.Output()
-	if err != nil {
-		fmt.Println(err.Error())
-	}
+	stdout, _ := cmd.Output()
 	fmt.Println(string(stdout))
 	play.SetText(">")
 	isPlay = false
