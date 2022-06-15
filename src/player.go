@@ -11,7 +11,9 @@ import (
 )
 
 var (
-	isPlay = false
+	isPlay   = false
+	needPlay = true
+	cmd      *exec.Cmd
 )
 
 func takeContent(pattern, row, col int) string { // ужас
@@ -52,7 +54,12 @@ func takeContent(pattern, row, col int) string { // ужас
 }
 
 func playTrack(play *widget.Button, current bool) {
-	needPlay := false
+	if !needPlay {
+		cmd.Process.Kill()
+		play.SetText(">")
+		return
+	}
+	needPlay = false
 	play.SetText("||")
 	sequenceStr, sequenceSlice := getSequence(current)
 	temp := title + sequenceStr + instruments
@@ -61,31 +68,24 @@ func playTrack(play *widget.Button, current bool) {
 		for row := 0; row < 64; row++ {
 			row := "\n\t\tRow \"" + takeContent(s, row, 0) + " " + takeContent(s, row, 1) +
 				" " + takeContent(s, row, 2) + " " + takeContent(s, row, 3) + "\""
-			if row != "\n\t\tRow \"-------- -------- -------- --------\"" {
-				needPlay = true
-			}
 			temp += row
 		}
-	}
-	if !needPlay {
-		play.SetText(">")
-		return
 	}
 	err := os.WriteFile("temp.mt", []byte(temp+"\n(End)"), 0644)
 	if err != nil {
 		cathcer <- err
 	}
-	cmd := exec.Command("java", "-jar", "micromod.jar", "temp.mt")
+	cmd = exec.Command("java", "-jar", "micromod.jar", "temp.mt")
 	stdout, _ := cmd.Output()
 	fmt.Println(string(stdout))
 	play.SetText(">")
 	isPlay = false
+	needPlay = true
 }
 
 func makePlay() fyne.CanvasObject {
 	play := widget.NewButton(">", func() {})
 	play.OnTapped = func() {
-		fmt.Println(isPlay)
 		if !isPlay {
 			go playTrack(play, false)
 		}

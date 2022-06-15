@@ -15,12 +15,12 @@ import (
 	"time"
 )
 
-func makeInstruments() fyne.CanvasObject {
+func makeInstruments(path string) fyne.CanvasObject {
 	var (
 		instrumentsArr []fyne.CanvasObject
 		instr          string
 	)
-	files, err := ioutil.ReadDir("samples")
+	files, err := ioutil.ReadDir(path)
 	if err != nil {
 		cathcer <- err
 	}
@@ -31,13 +31,19 @@ func makeInstruments() fyne.CanvasObject {
 			if len(parts) != 3 {
 				continue
 			}
-			instr += "\tInstrument "
+			instr += "\n\tInstrument "
 			_, err := strconv.Atoi(parts[0])
 			if err != nil {
 				continue
 			}
-			instr += parts[0] + " Name \"" + parts[1] + "\"\n\t\tVolume 64 FineTune 0\n\t\tWaveFile \"samples/" + i.Name() + "\""
+			instr += parts[0] + " Name \"" + parts[1] + "\"\n\t\tVolume 64 FineTune 0\n\t\tWaveFile \"" + path + "/" + i.Name() + "\""
 			if cont, start, length := checkStars(parts[2]); !cont {
+				if strings.Contains(start, "-") {
+					start = strings.ReplaceAll(start, "-", "")
+				}
+				if strings.Contains(length, "-") {
+					length = strings.ReplaceAll(length, "-", "")
+				}
 				instr += "\n\t\tLoopStart " + start + " LoopLength " + length
 			}
 			name := parts[0] + " " + parts[1]
@@ -45,7 +51,7 @@ func makeInstruments() fyne.CanvasObject {
 				widget.NewButton(">", func(i fs.FileInfo) func() {
 					return func() {
 						go func() {
-							f, err := os.Open("samples/" + i.Name())
+							f, err := os.Open(path + "/" + i.Name())
 							if err != nil {
 								cathcer <- err
 							}

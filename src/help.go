@@ -33,6 +33,7 @@ Module "temp"
 	Sequence `
 
 	instruments string
+	namer       = 0
 )
 
 func wrapStr(str string) string {
@@ -87,4 +88,28 @@ func checkStars(end string) (cont bool, start string, length string) {
 		cont = true
 	}
 	return
+}
+
+func genName() string {
+	name := "name" + strconv.Itoa(namer)
+	namer += 1
+	return name
+}
+
+func contains(s []int, e int) bool {
+	for _, a := range s {
+		if a == e {
+			return true
+		}
+	}
+	return false
+}
+
+func remove(l []int, item int) []int {
+	for i, other := range l {
+		if other == item {
+			return append(l[:i], l[i+1:]...)
+		}
+	}
+	return l
 }

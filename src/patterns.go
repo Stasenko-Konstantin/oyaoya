@@ -1,6 +1,8 @@
 package src
 
 import (
+	"errors"
+	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
@@ -94,4 +96,14 @@ func makePatterns() fyne.CanvasObject {
 		patterns.scroll,
 		songPatterns,
 	)
+}
+
+func findPattern(pattern int) (int, error) {
+	fmt.Println(pattern)
+	for _, p := range songPatterns.Content.(*fyne.Container).Objects {
+		if p.(*widget.Button).Text == wrapStr(strconv.Itoa(pattern)) {
+			return pattern, nil
+		}
+	}
+	return pattern, errors.New("")
 }

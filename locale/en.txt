@@ -20,3 +20,7 @@ instruments: Instruments
 about text: Student 432 gr. Stasenko K.Y.
 change lang: Language change
 change lang msg: For the settings to take effect, restart the program
+transform: Transform
+transform msg: The composition does not fit the internal format. Do you want to convert it?
+error: Error
+channels error: The composition does not match the internal format and cannot be converted. Please select another one.

@@ -9,6 +9,7 @@ import (
 	"fyne.io/fyne/v2/dialog"
 	theme2 "fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
+	"os"
 )
 
 var (
@@ -49,11 +50,19 @@ func Start() {
 
 	readConf()
 	readLocale()
+	clean()
 
 	mainMenu := fyne.NewMainMenu(
 		fyne.NewMenu(locale["menu"],
 			fyne.NewMenuItem(locale["new"], func() { setNewSong() }),
-			fyne.NewMenuItem(locale["open"], func() { dialog.ShowFileOpen(func(closer fyne.URIReadCloser, err error) { openSong(closer) }, w) }),
+			fyne.NewMenuItem(locale["open"], func() {
+				dialog.ShowFileOpen(func(closer fyne.URIReadCloser, err error) {
+					if closer == nil {
+						return
+					}
+					openSong(closer.URI().Path(), closer.URI().Name())
+				}, w)
+			}),
 			fyne.NewMenuItem(locale["save"], func() { dialog.ShowInformation(locale["save"], locale["save"], w) }),
 			fyne.NewMenuItem(locale["save as"], func() { dialog.ShowFileSave(func(closer fyne.URIWriteCloser, err error) {}, w) }),
 			fyne.NewMenuItem(locale["settings"], func() {
@@ -80,7 +89,7 @@ func Start() {
 	widgets = container.NewWithoutLayout(
 		fon,
 		makePatterns(),
-		makeInstruments(),
+		makeInstruments("samples"),
 		makePlay(),
 		makeNames(),
 		makeChannels(),
@@ -102,9 +111,27 @@ func Start() {
 		cathcer <- err
 	}
 
+	go func() {
+		openSong("test.mod", "test.mod")
+		setNewSong()
+	}()
+
 	w.ShowAndRun()
 }
 
 func setTheme(theme string) {
 	setConfigField("theme", theme)
+}
+
+func clean() {
+	if _, err := os.Stat("temp.mod"); !errors.Is(err, os.ErrNotExist) {
+		os.Remove("temp.mod")
+	}
+	if _, err := os.Stat("temp.mt"); !errors.Is(err, os.ErrNotExist) {
+		os.Remove("temp.mt")
+	}
+	if _, err := os.Stat("temp"); !errors.Is(err, os.ErrNotExist) {
+		os.RemoveAll("temp")
+		os.Remove("temp")
+	}
 }
