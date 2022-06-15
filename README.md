@@ -2,6 +2,10 @@
 Tracker music editor
 
 ![](etc/logo.jpg)
+logo
+
+![](etc/screenshot_1.png)
+![](etc/screenshot_2.png)
 
 Some materials from [Martin Cameron](https://github.com/martincameron), specifically [micromod](https://github.com/martincameron/micromod)
 

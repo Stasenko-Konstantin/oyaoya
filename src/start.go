@@ -52,6 +52,9 @@ func Start() {
 	readLocale()
 	clean()
 
+	instructionC := container.NewVScroll(widget.NewLabel(instruction))
+	instructionC.SetMinSize(fyne.NewSize(500, 400))
+
 	mainMenu := fyne.NewMainMenu(
 		fyne.NewMenu(locale["menu"],
 			fyne.NewMenuItem(locale["new"], func() { setNewSong() }),
@@ -80,7 +83,9 @@ func Start() {
 		),
 		fyne.NewMenu(locale["help"],
 			fyne.NewMenuItem(locale["about"], func() { dialog.ShowInformation(locale["about"], locale["about text"], w) }),
-			fyne.NewMenuItem(locale["instruction"], func() { dialog.ShowCustom(locale["instruction"], "OK", widget.NewLabel(instruction), w) }),
+			fyne.NewMenuItem(locale["instruction"], func() {
+				dialog.ShowCustom(locale["instruction"], "OK", instructionC, w)
+			}),
 			fyne.NewMenuItem(locale["license"], func() { dialog.ShowInformation(locale["license"], license, w) }),
 		),
 	)
@@ -110,6 +115,7 @@ func Start() {
 	if err != nil {
 		cathcer <- err
 	}
+	instructionC.Content.(*widget.Label).SetText(instruction)
 
 	go func() {
 		openSong("test.mod", "test.mod")

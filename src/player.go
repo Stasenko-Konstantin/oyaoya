@@ -60,7 +60,7 @@ func playTrack(play *widget.Button, current bool) {
 		return
 	}
 	needPlay = false
-	play.SetText("||")
+	play.SetText("[]")
 	sequenceStr, sequenceSlice := getSequence(current)
 	temp := title + sequenceStr + instruments
 	for _, s := range sequenceSlice {

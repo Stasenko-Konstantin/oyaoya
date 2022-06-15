@@ -1,3 +1,12 @@
+-----
+
+The basic element of tracker music can be called a pattern.
+A pattern is a table defining the order and mode of playback of samples (instruments)
+The pattern is a table defining the order in which the samples (instruments) are played on several channels in a certain period of time.
+In the program, it is represented by the main element - the "canvas" in which the music is written.
+
+-----
+
 Notes takes the form 'KKOIIFPP', where:
 
     KK = Key (One of 'C-', 'C#', 'D-', 'D#', 'E-', 'F-', 'F#',
@@ -6,3 +15,45 @@ Notes takes the form 'KKOIIFPP', where:
     II = Instrument or macro index (Decimal, 01 to 99, or '--').
     F  = Effect Command (Hexadecimal, 0 to F, or '-').
     PP = Effect Parameter (Hexadecimal, 00 to FF, or '--').
+
+-----
+
+A composition is a sequence of patterns.
+You can specify it with the " + " buttons below the patterns themselves.
+When you click on the " + " a modal window is displayed with the choice of the desired pattern or
+button " - " to cancel the selected pattern.
+
+-----
+
+Music can't just be played out of thin air, you need instruments to play it.
+In the program, you can see the entire list of available instruments in the corresponding part of the window.
+Only 10 instruments are available to the user as standard, but if you select a third-party song
+or by loading ".wav" files in a special way in the folder "sample", additional  instruments can become available to the user.
+
+-----
+
+The special instrument download image is to rename ".wav"
+according to the following cipher "nn|name|******.wav", where:
+
+    nn = Instrument number (01 to 99)
+    name = Instrument name (any characters except "|", ".")
+    ****** = Two three-digit numbers or asterisks (numbers can be -nn or --n, for example -12--4)
+
+-----
+
+There are 2 buttons for playing music: 
+    
+    1 (left) - plays the current pattern
+    2 (right-top) - plays the whole song according to the specified pattern sequence
+
+-----
+
+The menu items allow you to:
+    
+    - Create a new song
+    - Open a song
+    - Save a song
+    - Quit the program
+    - View instructions
+    - View artist information
+    - View your license
