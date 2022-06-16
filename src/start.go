@@ -13,10 +13,12 @@ import (
 )
 
 var (
-	cathcer = make(chan error)
-	window  *fyne.Window
-	fon     *canvas.Image
-	widgets *fyne.Container
+	cathcer  = make(chan error)
+	window   *fyne.Window
+	fon      *canvas.Image
+	widgets  *fyne.Container
+	needSave = true
+	savePath string
 )
 
 func errorCatcher(handler chan error, w fyne.Window) {
@@ -66,8 +68,14 @@ func Start() {
 					openSong(closer.URI().Path(), closer.URI().Name())
 				}, w)
 			}),
-			fyne.NewMenuItem(locale["save"], func() { dialog.ShowInformation(locale["save"], locale["save"], w) }),
-			fyne.NewMenuItem(locale["save as"], func() { dialog.ShowFileSave(func(closer fyne.URIWriteCloser, err error) {}, w) }),
+			fyne.NewMenuItem(locale["save"], func() {
+				if needSave {
+					saveAs()
+				} else {
+					saveSong(savePath)
+				}
+			}),
+			fyne.NewMenuItem(locale["save as"], func() { saveAs() }),
 			fyne.NewMenuItem(locale["settings"], func() {
 				dialog.ShowCustom(locale["settings"], locale["cancel"], container.NewVBox(
 					container.NewHScroll(container.NewHBox(

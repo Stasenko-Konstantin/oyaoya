@@ -11,7 +11,7 @@ instruction: Instruction
 patterns: Patterns
 choose pattern: Choose pattern
 cancel: Cancel
-wrong format: Wron format! Try .mt or .mod
+wrong format: Wron format! Try .mod
 instruction text: locale/instruction-en.txt
 dark theme: Dark theme
 light theme: Light theme

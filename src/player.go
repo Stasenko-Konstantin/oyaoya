@@ -1,6 +1,7 @@
 package src
 
 import (
+	"errors"
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -70,6 +71,9 @@ func playTrack(play *widget.Button, current bool) {
 				" " + takeContent(s, row, 2) + " " + takeContent(s, row, 3) + "\""
 			temp += row
 		}
+	}
+	if _, err := os.Stat("temp.mt"); !errors.Is(err, os.ErrNotExist) {
+		os.Remove("temp.mt")
 	}
 	err := os.WriteFile("temp.mt", []byte(temp+"\n(End)"), 0644)
 	if err != nil {

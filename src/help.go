@@ -49,14 +49,6 @@ func strToNum(str string) int {
 	return n
 }
 
-func checkFormat(format string) bool {
-	r := true
-	if format == "mod" || format == "mt" {
-		r = false
-	}
-	return r
-}
-
 func addTxt(lang string) string {
 	var r string
 	for _, c := range lang {

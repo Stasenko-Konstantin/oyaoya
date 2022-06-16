@@ -17,6 +17,7 @@ import (
 
 func setNewSong() {
 	namer = 0
+	needSave = true
 	(*window).SetTitle("oyaoya")
 	for _, c := range channelsSelect {
 		for _, col := range c.channel.Objects[0].(*container.Scroll).Content.(*fyne.Container).Objects {
@@ -38,15 +39,14 @@ func setNewSong() {
 func openSong(path, file string) {
 	clean()
 	name := strings.Split(file, ".")
-	if len(name) < 2 || checkFormat(name[1]) {
+	if len(name) < 2 || name[1] != "mod" {
 		cathcer <- errors.New(locale["wrong format"])
 		return
 	}
-	if name[1] == "mod" {
-		openMod(path)
-	} else {
-		openMt(path)
-	}
+	fmt.Println(path)
+	needSave = false
+	savePath = path
+	openMod(path)
 }
 
 func openMod(path string) {
@@ -194,14 +194,14 @@ func normalize() {
 
 func openMt(path string) {
 	i := 0
-	//defer func() {
-	//	if r := recover(); r != nil {
-	//		setNewSong()
-	//		cathcer <- r.(error)
-	//		i = 1
-	//		return
-	//	}
-	//}()
+	defer func() {
+		if r := recover(); r != nil {
+			setNewSong()
+			cathcer <- r.(error)
+			i = 1
+			return
+		}
+	}()
 	for i < 1 {
 		data, err := os.ReadFile(path)
 		if err != nil {
@@ -394,4 +394,69 @@ func normilizeSeq(sequence []string, patterns []string) []string {
 		r[i] = p
 	}
 	return r
+}
+
+func saveAs() {
+	dialog.ShowFileSave(func(closer fyne.URIWriteCloser, err error) {
+		if closer == nil {
+			return
+		}
+		name := strings.Split(closer.URI().Name(), ".")
+		if len(name) != 2 || name[1] != "mod" {
+			closer.Close()
+			dialog.ShowError(errors.New(locale["wrong format"]), *window)
+			if _, err := os.Stat(closer.URI().Path()); !errors.Is(err, os.ErrNotExist) {
+				os.Remove(closer.URI().Path())
+			}
+			return
+		}
+		saveSong(closer.URI().Path())
+	}, *window)
+}
+
+func saveSong(path string) {
+	if _, err := os.Stat("temp.mod"); !errors.Is(err, os.ErrNotExist) {
+		os.Remove("temp.mod")
+	}
+	cmd := exec.Command("java", "-jar", "micromod.jar", "temp.mt", "-out", "temp.mod")
+	stdout, _ := cmd.Output()
+	fmt.Println(string(stdout))
+	data, err := ioutil.ReadFile(path)
+	if err != nil {
+		cathcer <- err
+		return
+	}
+	if _, err := os.Stat("old.mod"); !errors.Is(err, os.ErrNotExist) {
+		os.Remove("old.mod")
+	}
+	f, err := os.Create("old.mod")
+	if err != nil {
+		cathcer <- err
+		return
+	}
+	_, err = f.Write(data)
+	if err != nil {
+		cathcer <- err
+		return
+	}
+	if _, err := os.Stat(path); !errors.Is(err, os.ErrNotExist) {
+		os.Remove(path)
+	}
+	data, err = ioutil.ReadFile("temp.mod")
+	if err != nil {
+		cathcer <- err
+		return
+	}
+	f, err = os.Create(path)
+	if err != nil {
+		cathcer <- err
+		return
+	}
+	_, err = f.Write(data)
+	if err != nil {
+		cathcer <- err
+		return
+	}
+	savePath = path
+	needSave = false
 }
