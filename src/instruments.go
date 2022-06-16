@@ -27,7 +27,7 @@ func makeInstruments(path string) fyne.CanvasObject {
 	for _, i := range files {
 		slice := strings.Split(i.Name(), ".")
 		if slice[len(slice)-1] == "wav" {
-			parts := strings.Split(i.Name()[:len(i.Name())-4], "|")
+			parts := strings.Split(i.Name()[:len(i.Name())-4], "#")
 			if len(parts) != 3 {
 				continue
 			}

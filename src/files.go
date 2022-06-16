@@ -138,7 +138,7 @@ func normalize() {
 				}
 			}
 		} else {
-			start = "***"
+			start = "%%%"
 		}
 		if len(start) < 3 {
 			start = strings.Repeat("-", 3-len(start)) + start
@@ -153,7 +153,7 @@ func normalize() {
 				}
 			}
 		} else {
-			length = "***"
+			length = "%%%"
 		}
 		length = strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(length[:3], " ", ""), "\t", ""), "\n", ""), "\r", "")
 		if len(length) < 3 {
@@ -177,7 +177,7 @@ func normalize() {
 			cathcer <- err
 			return
 		}
-		f, err := os.Create(filepath.Join("temp/", number+"|"+name+"|"+start+length+".wav"))
+		f, err := os.Create(filepath.Join("temp/", number+"#"+name+"#"+start+length+".wav"))
 		if err != nil {
 			cathcer <- err
 			return
