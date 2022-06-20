@@ -2,14 +2,13 @@
 Tracker music editor
 
 ![](etc/logo.jpg)
-logo
-
 ![](etc/screenshot_1.png)
 ![](etc/screenshot_2.png)
 
 # build
 
 You need golang and gcc compilers installed.                                                
+Also for running program you need jvm v=>17                                              
 In program folder type:
 ```
 go build main.go
