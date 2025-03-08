@@ -21,7 +21,9 @@ var (
 		"\talong with this program.  If not, see <http://www.gnu.org/licenses/>.\n" + "\n\n" +
 		"\tcontacts:\n" +
 		"\t    mail - stasenko.ky@gmail.com\n" +
-		"\t    github - Stasenko-Konstantin\n\n"
+		"\t    github - Stasenko-Konstantin\n\n" +
+		"\nIt includes code from micromod by Martin Cameron,\n" + 
+		"which is licensed under the BSD-3-like license. See LICENSE."
 	instruction = "" // start.go getInstruction()
 )
 
