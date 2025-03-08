@@ -16,6 +16,6 @@ go build main.go
 ```
 ---
 
-It includes code from [micromod](https://github.com/martincameron/micromod) by [Martin Cameron](https://github.com/martincameron), which is licensed under the BSD-3-like license.  
+It includes code from [micromod](https://github.com/martincameron/micromod) by [Martin Cameron](https://github.com/martincameron), which is licensed under the BSD-3-Clause license.  
 
 Special thanks to [Durasel](https://github.com/durasel74) and [Jorik123890](https://github.com/Jorik123890)
