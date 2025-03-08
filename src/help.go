@@ -23,7 +23,7 @@ var (
 		"\t    mail - stasenko.ky@gmail.com\n" +
 		"\t    github - Stasenko-Konstantin\n\n" +
 		"\nIt includes code from micromod by Martin Cameron,\n" + 
-		"which is licensed under the BSD-3-Clause license. See LICENSE."
+		"which is licensed under the BSD-3-Clause license. See THIRD-PARTY-LICENSES."
 	instruction = "" // start.go getInstruction()
 )
 
